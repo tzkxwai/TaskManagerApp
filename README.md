@@ -16,3 +16,18 @@
 <img width="973" height="220" alt="image" src="https://github.com/user-attachments/assets/32578203-b72d-44a5-983e-7bf47db547be" />
 <img width="1011" height="823" alt="image" src="https://github.com/user-attachments/assets/932d5855-e460-4243-9565-1eacf6ddc0df" />
 <img width="672" height="266" alt="image" src="https://github.com/user-attachments/assets/55b3b1e3-5a61-48a8-9590-f06eb2f13510" />
+
+
+
+
+
+
+2.4. Реализация структурированных логов в TaskManager
+
+
+
+
+
+<img width="938" height="488" alt="image" src="https://github.com/user-attachments/assets/20f15518-b3ba-408f-b5e0-41adddbf0bc2" />
+<img width="958" height="528" alt="image" src="https://github.com/user-attachments/assets/e6486cd3-5b4f-40d7-9502-dd9d988fc361" />
+<img width="634" height="95" alt="image" src="https://github.com/user-attachments/assets/46429cbe-3108-4761-98a1-889d44186133" />
