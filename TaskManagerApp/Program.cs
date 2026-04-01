@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
+using System.Diagnostics; 
+using Serilog;
+using Serilog.Formatting.Json;
 
 class TaskItem
 {
@@ -20,31 +21,35 @@ class TaskManager
 
     public void AddTask(string title)
     {
-        Trace.WriteLine("[TRACE] Начало операции AddTask.");
-        Trace.WriteLine($"[TRACE] Проверка введённого названия: \"{title}\"");
+        var stopwatch = Stopwatch.StartNew(); 
+        Log.Debug("Начало операции AddTask");
 
         if (string.IsNullOrWhiteSpace(title))
         {
-            Trace.TraceWarning("[WARN] Пользователь ввёл пустое название. Операция add не выполнена.");
-            Trace.WriteLine("[TRACE] Конец операции AddTask. Результат: неудача.");
+            stopwatch.Stop();
+            Log.Warning("Пользователь ввёл пустое название.");
+            Log.Debug("Конец AddTask. Результат: неудача. Время: {Time} ms", stopwatch.ElapsedMilliseconds);
             return;
         }
 
         tasks.Add(new TaskItem(title));
-        Trace.TraceInformation($"[INFO] Задача \"{title}\" успешно добавлена.");
-        Trace.TraceInformation($"[INFO] Количество задач: {tasks.Count}");
-        Trace.WriteLine("[TRACE] Конец операции AddTask. Результат: успех.");
+
+        stopwatch.Stop();
+        Log.Information("Задача \"{Title}\" успешно добавлена.", title);
+        Log.Information("Количество задач: {Count}", tasks.Count);
+        Log.Debug("Конец AddTask. Результат: успех. Время: {Time} ms", stopwatch.ElapsedMilliseconds);
     }
 
     public void RemoveTask(string title)
     {
-        Trace.WriteLine("[TRACE] Начало операции RemoveTask.");
-        Trace.WriteLine($"[TRACE] Поиск задачи: \"{title}\"");
+        var stopwatch = Stopwatch.StartNew();
+        Log.Debug("Начало операции RemoveTask");
 
         if (string.IsNullOrWhiteSpace(title))
         {
-            Trace.TraceWarning("[WARN] Пользователь ввёл пустое название. Операция remove не выполнена.");
-            Trace.WriteLine("[TRACE] Конец операции RemoveTask. Результат: неудача.");
+            stopwatch.Stop();
+            Log.Warning("Пользователь ввёл пустое название.");
+            Log.Debug("Конец RemoveTask. Результат: неудача. Время: {Time} ms", stopwatch.ElapsedMilliseconds);
             return;
         }
 
@@ -52,26 +57,31 @@ class TaskManager
 
         if (task == null)
         {
-            Trace.TraceError($"[ERROR] Задача \"{title}\" не найдена.");
-            Trace.WriteLine("[TRACE] Конец операции RemoveTask. Результат: неудача.");
+            stopwatch.Stop();
+            Log.Error("Задача \"{Title}\" не найдена.", title);
+            Log.Debug("Конец RemoveTask. Результат: ошибка. Время: {Time} ms", stopwatch.ElapsedMilliseconds);
             return;
         }
 
         tasks.Remove(task);
-        Trace.TraceInformation($"[INFO] Задача \"{title}\" удалена.");
-        Trace.TraceInformation($"[INFO] Количество задач: {tasks.Count}");
-        Trace.WriteLine("[TRACE] Конец операции RemoveTask. Результат: успех.");
+
+        stopwatch.Stop();
+        Log.Information("Задача \"{Title}\" удалена.", title);
+        Log.Information("Количество задач: {Count}", tasks.Count);
+        Log.Debug("Конец RemoveTask. Результат: успех. Время: {Time} ms", stopwatch.ElapsedMilliseconds);
     }
 
     public void ListTasks()
     {
-        Trace.WriteLine("[TRACE] Начало операции ListTasks.");
+        var stopwatch = Stopwatch.StartNew();
+        Log.Debug("Начало операции ListTasks");
 
         if (tasks.Count == 0)
         {
+            stopwatch.Stop();
             Console.WriteLine("Список задач пуст.");
-            Trace.TraceInformation("[INFO] Список задач пуст.");
-            Trace.WriteLine("[TRACE] Конец операции ListTasks. Результат: список пуст.");
+            Log.Information("Список задач пуст.");
+            Log.Debug("Конец ListTasks. Результат: пусто. Время: {Time} ms", stopwatch.ElapsedMilliseconds);
             return;
         }
 
@@ -81,8 +91,9 @@ class TaskManager
             Console.WriteLine($"{i + 1}. {tasks[i].Title}");
         }
 
-        Trace.TraceInformation($"[INFO] Выведено задач: {tasks.Count}");
-        Trace.WriteLine("[TRACE] Конец операции ListTasks. Результат: успех.");
+        stopwatch.Stop();
+        Log.Information("Выведено задач: {Count}", tasks.Count);
+        Log.Debug("Конец ListTasks. Результат: успех. Время: {Time} ms", stopwatch.ElapsedMilliseconds);
     }
 }
 
@@ -90,12 +101,12 @@ class Program
 {
     static void Main()
     {
+        ConfigureLogging();
+
         try
         {
-            ConfigureLogging();
-
-            Trace.TraceInformation("[INFO] Приложение запущено.");
-            Trace.WriteLine("[TRACE] Инициализация приложения.");
+            Log.Information("Приложение запущено.");
+            Log.Debug("Инициализация приложения.");
 
             TaskManager manager = new TaskManager();
 
@@ -105,7 +116,7 @@ class Program
                 Console.Write("Введите команду: ");
                 string command = Console.ReadLine()?.Trim().ToLower() ?? "";
 
-                Trace.WriteLine($"[TRACE] Введена команда: {command}");
+                Log.Debug("Введена команда: {Command}", command);
 
                 switch (command)
                 {
@@ -126,37 +137,48 @@ class Program
                         break;
 
                     case "exit":
-                        Trace.TraceInformation("[INFO] Приложение завершено.");
-                        Trace.WriteLine("[TRACE] Завершение Main.");
-                        Trace.Flush();
+                        Log.Information("Приложение завершено.");
+                        Log.Debug("Завершение Main.");
                         return;
 
                     default:
                         Console.WriteLine("Неизвестная команда.");
-                        Trace.TraceWarning($"[WARN] Неизвестная команда: {command}");
+                        Log.Warning("Неизвестная команда: {Command}", command);
                         break;
                 }
             }
         }
         catch (Exception ex)
         {
-            Trace.TraceError($"[ERROR] Необработанная ошибка: {ex.Message}");
-            Trace.WriteLine("[CRITICAL] Критическая ошибка приложения. Завершение работы.");
-            Trace.Flush();
+            Log.Fatal(ex, "Критическая ошибка приложения.");
+        }
+        finally
+        {
+            Log.CloseAndFlush();
         }
     }
 
     static void ConfigureLogging()
     {
-        Trace.Listeners.Clear();
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Debug()
 
-        Trace.Listeners.Add(new ConsoleTraceListener());
+            .WriteTo.Console(
+                outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
 
-        string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-        string logPath = Path.Combine(desktopPath, "log.txt");
 
-        Trace.Listeners.Add(new TextWriterTraceListener(logPath));
+            .WriteTo.File(
+                path: "logs\\taskmanager-.log",
+                rollingInterval: RollingInterval.Day,
+                retainedFileCountLimit: 7,
+                outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
 
-        Trace.AutoFlush = true;
+            .WriteTo.File(
+                new JsonFormatter(),
+                path: "logs\\taskmanager-.json",
+                rollingInterval: RollingInterval.Day,
+                retainedFileCountLimit: 7)
+
+            .CreateLogger();
     }
 }
