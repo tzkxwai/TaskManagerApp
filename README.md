@@ -1,4 +1,33 @@
+
+
+
+
+
+
+
+
+
+
 # TaskManagerApp
+
+Исправленная работа 
+
+
+
+
+<img width="739" height="512" alt="image" src="https://github.com/user-attachments/assets/cb52b423-9114-4730-8cc2-5e83bdfc1166" />
+<img width="732" height="500" alt="image" src="https://github.com/user-attachments/assets/5aa444ae-1599-4a13-a814-5e1629ccb3f1" />
+<img width="759" height="405" alt="image" src="https://github.com/user-attachments/assets/3c9d07a3-07ad-4a20-b31e-9c1713da5a4b" />
+
+
+
+
+
+
+
+
+
+
 <img width="954" height="511" alt="image" src="https://github.com/user-attachments/assets/27dd9fc5-0440-445a-bff4-65b305c1dd33" />
 <img width="986" height="517" alt="image" src="https://github.com/user-attachments/assets/a9c39d46-c7c9-4b9b-a67c-d55bf3fa160a" />
 <img width="633" height="209" alt="image" src="https://github.com/user-attachments/assets/4700335c-9768-4ba6-8e1c-d6c966529daf" />
